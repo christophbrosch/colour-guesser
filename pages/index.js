@@ -1,7 +1,11 @@
 import Head from 'next/head'
 import styles from 'styles/Home.module.css'
 
-import Footer from 'components/common/footer';
+import Button from 'react-bootstrap/Button'
+
+import Footer from 'components/common/footer'
+import CustomModal from 'components/common/modal'
+
 export default function Home() {
   return (
     <div className={styles.container}>
@@ -12,6 +16,7 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
+        <Button variant="primary">Open Modal</Button>
       </main>
 
       <Footer></Footer>
