@@ -12,6 +12,7 @@ import ColourPanel from 'components/index/ColourPanel'
 import Choice from 'components/index/Choice'
 
 import { getColourData } from 'lib/game'
+import { shuffle } from 'lib/utils'
 
 export default function Game({ colours }) {
   
@@ -23,8 +24,8 @@ export default function Game({ colours }) {
   const [best, setBest] = useState(0)
 
   const [choices, setChoices] = useState(Array(4).fill('default'))
+  const [correctAnswer, setCorrectAnswer] = useState('')
 
-  
   const randomlySetNewColour = function() {
 
     let copiedColour = JSON.parse(JSON.stringify(colours))
@@ -35,6 +36,8 @@ export default function Game({ colours }) {
     }
 
     let primaryColour = getRandomKey(copiedColour)
+    setCorrectAnswer(primaryColour)
+
     const secondaryColour = getRandomKey(copiedColour[primaryColour])
     const newColour = copiedColour[primaryColour][secondaryColour]
 
@@ -52,10 +55,15 @@ export default function Game({ colours }) {
     setChoices(choices)
   }
 
+  const answerButtonHandler = (answer) => {
+    console.log(correctAnswer)
+    if (answer === correctAnswer) {
+      randomlySetNewColour()
+    }
+  }
+
   useEffect(() => {
     randomlySetNewColour()
-    const interval = setInterval(randomlySetNewColour, 10000)
-    return () => clearInterval(interval)
   }, [])
 
   return (
@@ -85,7 +93,7 @@ export default function Game({ colours }) {
         { choices.map( (choice, index) => {
           return (
             <Col key={index} className="answer-area__choice d-flex justify-content-center">
-              <Choice value={choice}/>
+              <Choice onClick={() => answerButtonHandler(choice)} value={choice}/>
             </Col>
           )
         })}
@@ -102,19 +110,4 @@ export async function getStaticProps() {
       colours: colours
     }
   }
-}
-
-/**
- * Shuffles array in place.
- * @param {Array} a items An array containing the items.
- */
- function shuffle (arr) {
-  var j, x, index;
-  for (index = arr.length - 1; index > 0; index--) {
-      j = Math.floor(Math.random() * (index + 1));
-      x = arr[index];
-      arr[index] = arr[j];
-      arr[j] = x;
-  }
-  return arr;
 }

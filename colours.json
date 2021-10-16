@@ -1,5 +1,5 @@
 {
-    "grey": {
+    "grau": {
         "White smoke": "#F5F5F5",
         "Platinum": "#E5E4E2",
         "Timberwolf": "#DBD7D2",
@@ -65,7 +65,7 @@
         "Thulian pink": "#DE6FA1",
         "Ultra pink": "#FF6FFF"
     },
-    "black": {
+    "schwarz": {
         "Bistre": "#3D2B1F",
         "Black": "#000000",
         "Black bean": "#3D0C02",
@@ -112,7 +112,7 @@
         "Chinese Violet": "#856088",
         "Violet (JTC)": "#5B3256"
     },
-    "green": {
+    "grün": {
         "Android green": "#3DDC84",
         "Apple green": "#8DB600",
         "Aquamarine": "#00FFBF",
@@ -183,7 +183,7 @@
         "Viridian": "#40826D",
         "Yellow-green": "#9ACD32"
     },
-    "blue": {
+    "blau": {
         "Air Force blue": "#5D8AA8",
         "Alice Blue": "#F0F8FF",
         "Air superiority blue": "#72A0C1",
@@ -249,7 +249,7 @@
         "YInMn Blue": "#2e5090",
         "Zaffre": "#0014A8"
     },
-    "yellow": {
+    "gelb": {
         "Amber": "#FFBF00",
         "Apricot": "#FBCEB1",
         "Arylide yellow": "#E9D66B",
@@ -300,7 +300,7 @@
         "Wheat": "#F5DEB3",
         "Yellow": "#FFFF00"
     },
-    "cyan": {
+    "türkis": {
         "Alice blue": "#F0F8FF",
         "Aqua": "#0FFFFF",
         "Aquamarine": "#7FFFD4",
@@ -340,7 +340,7 @@
         "Vivid sky blue": "#00CCFF",
         "Zomp": "#39A78D"
     },
-    "azure": {
+    "azurblau": {
         "Ice blue": "#99FFFF",
         "Alice Blue": "#F0F8FF",
         "Air superiority blue": "#72A0C1",
@@ -392,7 +392,7 @@
         "Delft Blue": "#1F305E",
         "Resolution Blue": "#002387"
     },
-    "violet": {
+    "violett": {
         "African violet": "#B284BE",
         "Amethyst": "#9966CC",
         "Blue-violet": "#8A2BE2",
@@ -450,7 +450,7 @@
         "Violet": "#8000FF",
         "Wisteria": "#C9A0DC"
     },
-    "red": {
+    "rot": {
         "Red": "#FF0000",
         "Scarlet": "#FF2400",
         "Coquelicot": "#FF3800",
@@ -511,7 +511,7 @@
         "Rosy brown": "#BC8F8F",
         "Rose taupe": "#905D5D"
     },
-    "rose": {
+    "rosa": {
         "Rose": "#FF0080",
         "Tickle me pink": "#FC89AC",
         "Persian pink": "#F77FBE",
@@ -542,7 +542,7 @@
         "Rose ebony": "#674846",
         "Rosewood": "#65000B"
     },
-    "brown": {
+    "braun": {
         "Auburn": "#A52A2A",
         "Almond": "#EFDECD",
         "Beaver": "#9F8170",
@@ -609,7 +609,7 @@
         "Wenge": "#645452",
         "Wheat": "#F5DEB3"
     },
-    "white": {
+    "weiß": {
         "Alabaster": "#EDEAE0",
         "Alice blue": "#F0F8FF",
         "Antique white": "#FAEBD7",
