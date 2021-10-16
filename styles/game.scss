@@ -1,0 +1,33 @@
+.context {
+
+  height: 10svh;
+
+  &__box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 4;
+
+    border-right: 0.1rem solid grey;
+
+  }
+
+  &__header {
+    text-transform: uppercase;
+    font-size: medium;
+    font-weight: 300;
+  }
+}
+
+.colorpanel {
+  height: 50vh;
+}
+
+.answer-area {
+  height: 25vh;
+
+  &__choice {
+    height: 25%;
+  }
+}

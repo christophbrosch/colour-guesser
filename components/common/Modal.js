@@ -7,34 +7,40 @@ export default class CustomModal extends React.Component {
     constructor() {
         super()
         this.state = {show: false}
+        this.show = this.show.bind(this)
+        this.hide = this.hide.bind(this)
+    }
+
+    componentDidMount() {
         window.modal = this
-        console.log(window)
     }
 
     setShow(bool) {
-        this.state[show] = bool
+        this.setState({
+            show: bool
+        })
     }
 
-    handleClose() {
-        this.setShow(false)
-    }
-
-    handleOpen() {
+    show() {
         this.setShow(true)
+    }
+
+    hide() {
+        this.setShow(false)
     }
 
     render () {
         return (
-            <Modal show={show} onHide={handleClose}>
+            <Modal show={this.state.show} onHide={this.hide}>
                 <Modal.Header closeButton>
                 <Modal.Title>Modal heading</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
                 <Modal.Footer>
-                <Button variant="secondary" onClick={handleClose}>
+                <Button variant="secondary" onClick={this.hide}>
                     Close
                 </Button>
-                <Button variant="primary" onClick={handleClose}>
+                <Button variant="primary" onClick={this.hide}>
                     Save Changes
                 </Button>
                 </Modal.Footer>
