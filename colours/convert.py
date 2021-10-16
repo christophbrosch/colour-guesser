@@ -1,5 +1,6 @@
 import os
 import json
+from copy import deepcopy
 
 from bs4 import BeautifulSoup, NavigableString
 
@@ -32,6 +33,26 @@ if __name__ == '__main__':
         with open(os.path.join('input', colour), 'r') as file:
             colours[colour.replace('.html', '')] = convert(file.read())
     
+    _storage = []
+    for x_primary_colour in colours.keys():
+        for secondary_colour in colours[x_primary_colour].keys():
+
+            something_has_been_deleted = False
+
+            for y_primary_colour in colours.keys():
+                if secondary_colour in colours[y_primary_colour].keys():
+                    if y_primary_colour != x_primary_colour:
+                        del colours[y_primary_colour][secondary_colour]
+                        something_has_been_deleted = True
+            
+            if something_has_been_deleted:
+                _storage.append((x_primary_colour, secondary_colour))
+    
+    for primary_colour, secondary_colour in _storage:
+        del colours[primary_colour][secondary_colour]
+
     with open('output.json', 'w') as file:
         file.write(json.dumps(colours))
+
+
     
