@@ -44,9 +44,9 @@ export default function Game() {
         <ColorPanel />
       </Row>
       <Row className="answer-area align-items-center">
-        { choices.map( (choice) => {
+        { choices.map( (choice, index) => {
           return (
-            <Col className="answer-area__choice d-flex justify-content-center">
+            <Col key={index} className="answer-area__choice d-flex justify-content-center">
               <Choice value={choice}/>
             </Col>
           )
