@@ -22,6 +22,10 @@
 
 .colourpanel {
   height: 50vh;
+
+  & > * {
+    transition: background-color 500ms ease-in-out;
+  }
 }
 
 .answer-area {

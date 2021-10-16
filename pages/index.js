@@ -16,7 +16,7 @@ import { getColourData } from 'lib/game'
 export default function Game({ colours }) {
   
   const [colour, setColour] = useState("#eeeeee")
-
+  
   const [score, setScore] = useState(0)
   const [time, setTime] = useState(20.0)
   const [round, setRound] = useState(0)
@@ -26,19 +26,34 @@ export default function Game({ colours }) {
 
   
   const randomlySetNewColour = function() {
-    let keys = Object.keys(colours)
-    const primaryColour = keys[keys.length * Math.random() << 0]
 
-    keys = Object.keys(colours[primaryColour])
-    const secondaryColour = keys[keys.length * Math.random() << 0]
+    let copiedColour = JSON.parse(JSON.stringify(colours))
 
-    const newColour = colours[primaryColour][secondaryColour]
+    function getRandomKey(obj) {
+      let keys = Object.keys(obj)
+      return keys[keys.length * Math.random() << 0]
+    }
+
+    let primaryColour = getRandomKey(copiedColour)
+    const secondaryColour = getRandomKey(copiedColour[primaryColour])
+    const newColour = copiedColour[primaryColour][secondaryColour]
+
+    let choices = [primaryColour]
+    
+    for (let i = 0; i <3; i++) {
+      delete copiedColour[primaryColour]
+      primaryColour = getRandomKey(copiedColour)
+      choices.push(primaryColour)
+    }
+
+    choices = shuffle(choices)
+
     setColour(newColour)
-
-    console.log('New colour:', newColour)
+    setChoices(choices)
   }
 
   useEffect(() => {
+    randomlySetNewColour()
     const interval = setInterval(randomlySetNewColour, 10000)
     return () => clearInterval(interval)
   }, [])
@@ -89,3 +104,17 @@ export async function getStaticProps() {
   }
 }
 
+/**
+ * Shuffles array in place.
+ * @param {Array} a items An array containing the items.
+ */
+ function shuffle (arr) {
+  var j, x, index;
+  for (index = arr.length - 1; index > 0; index--) {
+      j = Math.floor(Math.random() * (index + 1));
+      x = arr[index];
+      arr[index] = arr[j];
+      arr[j] = x;
+  }
+  return arr;
+}
