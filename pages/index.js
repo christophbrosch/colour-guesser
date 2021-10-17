@@ -14,6 +14,7 @@ import CustomModal from 'components/common/CustomModal'
 
 import { getColourData } from 'lib/game'
 import { shuffle, useInterval } from 'lib/utils'
+import { useCookies } from 'react-cookie'
 
 export default function Game({ colours }) {
   
@@ -25,6 +26,8 @@ export default function Game({ colours }) {
   const [time, setTime] = useState(20.0)
   const [round, setRound] = useState(0)
   const [best, setBest] = useState(0)
+
+  const [cookies, setCookie, removeCookie] = useCookies(['best'])
 
   const [choices, setChoices] = useState(Array(4).fill('default'))
   const [correctAnswer, setCorrectAnswer] = useState('')
@@ -60,6 +63,9 @@ export default function Game({ colours }) {
 
   useInterval(() => {
     if (time <= 0.0) {
+      if (parseInt(cookies['best']) < score || cookies['best'] == undefined) {
+        setCookie('best', score)
+      }
       location.reload()
     } else {
       setTime(time - 0.1)
@@ -68,6 +74,9 @@ export default function Game({ colours }) {
 
   const startGame = () => {
     randomlySetNewColour()
+    if (cookies['best'] != undefined) {
+      setBest(parseInt(cookies['best']))
+    }
     setRunning(true)
   } 
 
