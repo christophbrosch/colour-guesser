@@ -3,7 +3,6 @@ import Head from 'next/head'
 import { Container } from 'react-bootstrap'
 
 import Footer from "components/common/Footer"
-import CustomModal from 'components/common/Modal'
 import Header from 'components/common/Header'
 
 export default function Layout({ children }) {
@@ -21,7 +20,6 @@ export default function Layout({ children }) {
         </Container>
       </main>
       <Footer />
-      <CustomModal></CustomModal>
     </>
   )
 }

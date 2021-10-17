@@ -10,14 +10,17 @@ import DisplayBest from 'components/index/DisplayBest'
 
 import ColourPanel from 'components/index/ColourPanel'
 import Choice from 'components/index/Choice'
+import CustomModal from 'components/common/CustomModal'
 
 import { getColourData } from 'lib/game'
-import { shuffle } from 'lib/utils'
+import { shuffle, useInterval } from 'lib/utils'
 
 export default function Game({ colours }) {
   
   const [colour, setColour] = useState("#eeeeee")
   
+  const [running, setRunning] = useState(false)
+
   const [score, setScore] = useState(0)
   const [time, setTime] = useState(20.0)
   const [round, setRound] = useState(0)
@@ -55,15 +58,31 @@ export default function Game({ colours }) {
     setChoices(choices)
   }
 
+  useInterval(() => {
+    if (time <= 0.0) {
+      location.reload()
+    } else {
+      setTime(time - 0.1)
+    }
+  }, running ? 100 : null)
+
+  const startGame = () => {
+    randomlySetNewColour()
+    setRunning(true)
+  } 
+
+  const startClickedHandler = () => {
+    startGame()
+  }
+
   const answerButtonHandler = (answer) => {
-    console.log(correctAnswer)
     if (answer === correctAnswer) {
       randomlySetNewColour()
     }
   }
 
   useEffect(() => {
-    randomlySetNewColour()
+    window.modal.show()
   }, [])
 
   return (
@@ -89,15 +108,18 @@ export default function Game({ colours }) {
       <Row className="colourpanel">
         <ColourPanel colour={colour}/>
       </Row>
-      <Row className="answer-area align-items-center">
-        { choices.map( (choice, index) => {
-          return (
-            <Col key={index} className="answer-area__choice d-flex justify-content-center">
-              <Choice onClick={() => answerButtonHandler(choice)} value={choice}/>
-            </Col>
-          )
-        })}
-      </Row>
+      <div className="container">
+        <Row className="answer-area align-items-center">
+          { choices.map( (choice, index) => {
+            return (
+              <Col xs={3} md={6} key={index} className="answer-area__choice d-flex justify-content-center">
+                <Choice onClick={() => answerButtonHandler(choice)} value={choice}/>
+              </Col>
+            )
+          })}
+        </Row>
+      </div>
+      <CustomModal onStartClickedHandler={startClickedHandler}></CustomModal>
     </Layout>
   )
 }

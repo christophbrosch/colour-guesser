@@ -1,5 +1,5 @@
 export default function DisplayTimer( {value} ) {
     return (
-        <span>{value}</span>
+        <span>{Math.round(value * 10) / 10}</span>
     )
 }

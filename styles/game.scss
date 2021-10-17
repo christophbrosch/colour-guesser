@@ -1,6 +1,6 @@
 .context {
 
-  height: 10svh;
+  height: 10vh;
 
   &__box {
     display: flex;
@@ -21,7 +21,7 @@
 }
 
 .colourpanel {
-  height: 50vh;
+  height: 55vh;
 
   & > * {
     transition: background-color 500ms ease-in-out;
@@ -29,9 +29,10 @@
 }
 
 .answer-area {
-  height: 25vh;
+  height: 20vh;
 
   &__choice {
     height: 25%;
   }
 }
+
