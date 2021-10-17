@@ -77,8 +77,12 @@ export default function Game({ colours }) {
 
   const answerButtonHandler = (answer) => {
     if (answer === correctAnswer) {
+      setScore(score => score + 100)
+      randomlySetNewColour()
+    } else {
       randomlySetNewColour()
     }
+    setRound(round + 1)
   }
 
   useEffect(() => {
