@@ -4,8 +4,8 @@ import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
 
 export default class CustomModal extends React.Component {
-    constructor() {
-        super()
+    constructor( {props} ) {
+        super( {props} )
         this.state = {show: false}
         this.show = this.show.bind(this)
         this.hide = this.hide.bind(this)
@@ -31,17 +31,13 @@ export default class CustomModal extends React.Component {
 
     render () {
         return (
-            <Modal show={this.state.show} onHide={this.hide}>
-                <Modal.Header closeButton>
-                <Modal.Title>Modal heading</Modal.Title>
+            <Modal show={this.state.show} centered>
+                <Modal.Header>
+                <Modal.Title>Colourguesser</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>Woohoo, you&apos;re reading this text in a modal!</Modal.Body>
                 <Modal.Footer>
-                <Button variant="secondary" onClick={this.hide}>
-                    Close
-                </Button>
-                <Button variant="primary" onClick={this.hide}>
-                    Save Changes
+                <Button variant="primary" onClick={() => {this.props.onStartClickedHandler(); this.hide()}}>
+                    Start
                 </Button>
                 </Modal.Footer>
             </Modal>
