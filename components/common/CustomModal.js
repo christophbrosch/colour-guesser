@@ -5,7 +5,7 @@ import Button from 'react-bootstrap/Button'
 
 export default class CustomModal extends React.Component {
     constructor( {props} ) {
-        super( {props} )
+        super( props )
         this.state = {show: false}
         this.show = this.show.bind(this)
         this.hide = this.hide.bind(this)
