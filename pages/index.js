@@ -32,6 +32,21 @@ export default function Game({ colours }) {
   const [choices, setChoices] = useState(Array(4).fill('default'))
   const [correctAnswer, setCorrectAnswer] = useState('')
 
+  useEffect(() => {
+    window.modal.show()
+  }, [])
+  
+  useInterval(() => {
+    if (time <= 0.0) {
+      if (parseInt(cookies['best']) < score || cookies['best'] == undefined) {
+        setCookie('best', score)
+      }
+      location.reload()
+    } else {
+      setTime(time - 0.1)
+    }
+  }, running ? 100 : null)
+
   const randomlySetNewColour = function() {
 
     let copiedColour = JSON.parse(JSON.stringify(colours))
@@ -60,17 +75,7 @@ export default function Game({ colours }) {
     setColour(newColour)
     setChoices(choices)
   }
-
-  useInterval(() => {
-    if (time <= 0.0) {
-      if (parseInt(cookies['best']) < score || cookies['best'] == undefined) {
-        setCookie('best', score)
-      }
-      location.reload()
-    } else {
-      setTime(time - 0.1)
-    }
-  }, running ? 100 : null)
+  
 
   const startGame = () => {
     randomlySetNewColour()
@@ -86,7 +91,13 @@ export default function Game({ colours }) {
 
   const answerButtonHandler = (answer) => {
     if (answer === correctAnswer) {
+      
       setScore(score => score + 100)
+
+      if (score > best) {
+        setBest(score)
+      }
+
       randomlySetNewColour()
     } else {
       randomlySetNewColour()
@@ -94,9 +105,6 @@ export default function Game({ colours }) {
     setRound(round + 1)
   }
 
-  useEffect(() => {
-    window.modal.show()
-  }, [])
 
   return (
     <Layout>
