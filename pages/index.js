@@ -23,7 +23,7 @@ export default function Game({ colours }) {
   const [running, setRunning] = useState(false)
 
   const [score, setScore] = useState(0)
-  const [time, setTime] = useState(2000.0)
+  const [time, setTime] = useState(20.0)
   const [round, setRound] = useState(0)
   const [best, setBest] = useState(0)
 
