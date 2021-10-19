@@ -23,7 +23,7 @@ export default function Game({ colours }) {
   const [running, setRunning] = useState(false)
 
   const [score, setScore] = useState(0)
-  const [time, setTime] = useState(20.0)
+  const [time, setTime] = useState(2000.0)
   const [round, setRound] = useState(0)
   const [best, setBest] = useState(0)
 
@@ -133,7 +133,7 @@ export default function Game({ colours }) {
         <Row className="answer-area align-items-center">
           { choices.map( (choice, index) => {
             return (
-              <Col xs={3} md={6} key={index} className="answer-area__choice d-flex justify-content-center">
+              <Col xs={6} key={index} className="answer-area__choice d-flex justify-content-center">
                 <Choice onClick={() => answerButtonHandler(choice)} value={choice}/>
               </Col>
             )
