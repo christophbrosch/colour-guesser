@@ -10,21 +10,42 @@ import DisplayBest from 'components/index/DisplayBest'
 
 import ColourPanel from 'components/index/ColourPanel'
 import Choice from 'components/index/Choice'
+import CustomModal from 'components/common/CustomModal'
 
 import { getColourData } from 'lib/game'
-import { shuffle } from 'lib/utils'
+import { shuffle, useInterval } from 'lib/utils'
+import { useCookies } from 'react-cookie'
 
 export default function Game({ colours }) {
   
   const [colour, setColour] = useState("#eeeeee")
   
+  const [running, setRunning] = useState(false)
+
   const [score, setScore] = useState(0)
   const [time, setTime] = useState(20.0)
   const [round, setRound] = useState(0)
   const [best, setBest] = useState(0)
 
+  const [cookies, setCookie, removeCookie] = useCookies(['best'])
+
   const [choices, setChoices] = useState(Array(4).fill('default'))
   const [correctAnswer, setCorrectAnswer] = useState('')
+
+  useEffect(() => {
+    window.modal.show()
+  }, [])
+  
+  useInterval(() => {
+    if (time <= 0.0) {
+      if (parseInt(cookies['best']) < score || cookies['best'] == undefined) {
+        setCookie('best', score)
+      }
+      location.reload()
+    } else {
+      setTime(time - 0.1)
+    }
+  }, running ? 100 : null)
 
   const randomlySetNewColour = function() {
 
@@ -54,17 +75,36 @@ export default function Game({ colours }) {
     setColour(newColour)
     setChoices(choices)
   }
+  
 
-  const answerButtonHandler = (answer) => {
-    console.log(correctAnswer)
-    if (answer === correctAnswer) {
-      randomlySetNewColour()
+  const startGame = () => {
+    randomlySetNewColour()
+    if (cookies['best'] != undefined) {
+      setBest(parseInt(cookies['best']))
     }
+    setRunning(true)
+  } 
+
+  const startClickedHandler = () => {
+    startGame()
   }
 
-  useEffect(() => {
-    randomlySetNewColour()
-  }, [])
+  const answerButtonHandler = (answer) => {
+    if (answer === correctAnswer) {
+      
+      setScore(score => score + 100)
+
+      if (score > best) {
+        setBest(score)
+      }
+
+      randomlySetNewColour()
+    } else {
+      randomlySetNewColour()
+    }
+    setRound(round + 1)
+  }
+
 
   return (
     <Layout>
@@ -89,15 +129,18 @@ export default function Game({ colours }) {
       <Row className="colourpanel">
         <ColourPanel colour={colour}/>
       </Row>
-      <Row className="answer-area align-items-center">
-        { choices.map( (choice, index) => {
-          return (
-            <Col key={index} className="answer-area__choice d-flex justify-content-center">
-              <Choice onClick={() => answerButtonHandler(choice)} value={choice}/>
-            </Col>
-          )
-        })}
-      </Row>
+      <div className="container">
+        <Row className="answer-area align-items-center">
+          { choices.map( (choice, index) => {
+            return (
+              <Col xs={6} key={index} className="answer-area__choice d-flex justify-content-center">
+                <Choice onClick={() => answerButtonHandler(choice)} value={choice}/>
+              </Col>
+            )
+          })}
+        </Row>
+      </div>
+      <CustomModal onStartClickedHandler={startClickedHandler}></CustomModal>
     </Layout>
   )
 }

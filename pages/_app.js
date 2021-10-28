@@ -1,5 +1,4 @@
-import 'bootstrap/dist/css/bootstrap.min.css'
-
+import 'styles/bootstrap.scss'
 import 'styles/globals.scss'
 import 'styles/game.scss'
 
