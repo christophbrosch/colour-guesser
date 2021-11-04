@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Col, Row } from 'react-bootstrap'
+import { Col, Row, Button } from 'react-bootstrap'
 
 import Layout from './_layout'
 
@@ -9,11 +9,10 @@ import DisplayScore from 'components/index/DisplayScore'
 import DisplayBest from 'components/index/DisplayBest'
 
 import ColourPanel from 'components/index/ColourPanel'
-import Choice from 'components/index/Choice'
 import CustomModal from 'components/common/CustomModal'
 
 import { getColourData } from 'lib/game'
-import { shuffle, useInterval } from 'lib/utils'
+import { shuffle, useInterval, zip } from 'lib/utils'
 import { useCookies } from 'react-cookie'
 
 export default function Game({ colours }) {
@@ -31,6 +30,7 @@ export default function Game({ colours }) {
 
   const [choices, setChoices] = useState(Array(4).fill('default'))
   const [correctAnswer, setCorrectAnswer] = useState('')
+  const [buttonVariant, setButtonVariant] = useState(Array(4).fill('primary'))
 
   useEffect(() => {
     window.modal.show()
@@ -89,18 +89,39 @@ export default function Game({ colours }) {
     startGame()
   }
 
-  const answerButtonHandler = (answer) => {
+  const changeButtonVariantBriefly = (index, variant, time) => {
+    const previousVariant = buttonVariant[index]
+
+    let newButtonVariant = [...buttonVariant]
+    newButtonVariant[index] = variant
+    console.log(newButtonVariant)
+    setButtonVariant(newButtonVariant)
+
+    setTimeout((previousVariant) => {
+      let newButtonVariant = [...buttonVariant]
+      newButtonVariant[index] = previousVariant
+      setButtonVariant(newButtonVariant)
+    }, time)
+  }
+
+  const answerButtonHandler = (answer, index) => {
     if (answer === correctAnswer) {
       
-      setScore(score => score + 100)
+      changeButtonVariantBriefly(index, 'success', 300)
 
-      if (score > best) {
-        setBest(score)
-      }
+      setTimeout(() => {
+        setScore(score => score + 100)
 
-      randomlySetNewColour()
+        if (score > best) {
+          setBest(score)
+        }
+        randomlySetNewColour()
+      }, 300)
     } else {
-      randomlySetNewColour()
+      changeButtonVariantBriefly(index, 'danger', 300)
+      setTimeout(() => {
+        randomlySetNewColour()
+      }, 300)
     }
     setRound(round + 1)
   }
@@ -131,10 +152,10 @@ export default function Game({ colours }) {
       </Row>
       <div className="container">
         <Row className="answer-area align-items-center">
-          { choices.map( (choice, index) => {
+          { zip(choices, buttonVariant).map( ([choice, state], index) => {
             return (
               <Col xs={6} key={index} className="answer-area__choice d-flex justify-content-center">
-                <Choice onClick={() => answerButtonHandler(choice)} value={choice}/>
+                <Button variant={state} onClick={() => answerButtonHandler(choice, index)} style={{textTransform: 'capitalize', width: "80%", height:"2rem", transition: "all 0.1s ease-out"}}>{choice}</Button>
               </Col>
             )
           })}
