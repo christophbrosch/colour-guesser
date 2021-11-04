@@ -1,5 +1,28 @@
+:root {
+  --vh: calc(100vh - 80px)
+}
 
-$real-vh: calc(100vh - 58px);
+.custom-border-bottom {
+  border-bottom: 0.1rem solid grey; 
+
+}
+
+.shift-up {
+  height: 0px;
+  margin: 0px;
+  padding: 0px;
+}
+
+.fullscreen {
+  --vh: 100vh;
+}
+
+nav {
+  position: relative;
+  z-index: 5000;
+  transition: all 0.5s ease-out;
+  height: 80px;
+}
 
 .context {
   &__box {
@@ -9,7 +32,9 @@ $real-vh: calc(100vh - 58px);
     align-items: center;
     flex-grow: 4;
 
-    height: calc($real-vh * 0.15);
+    height: calc(var(--vh) * 0.10);
+    transition: height 0.5s ease-out;
+
     border-right: 0.1rem solid grey;
 
   }
@@ -22,7 +47,9 @@ $real-vh: calc(100vh - 58px);
 }
 
 .colourpanel {
-  height: calc($real-vh * 0.55);
+  height: calc(var(--vh) * 0.575);
+  transition: height 0.5s ease-out;
+
 
   & > * {
     transition: background-color 500ms ease-in-out;
@@ -30,12 +57,16 @@ $real-vh: calc(100vh - 58px);
 }
 
 .answer-area {
-  height: calc($real-vh * 0.2);
+  height: calc(var(--vh) * 0.225);
+  transition: height 0.5s ease-out;
 }
 
 .footer {
   width: 100%;
-  height: calc($real-vh * 0.1);
+  height: calc(var(--vh) * 0.1);
+  transition: height 0.5s ease-out;
+
+
   border-top: 1px solid #eaeaea;
   display: flex;
   justify-content: center;

@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { Col, Row, Button } from 'react-bootstrap'
+import { Container, Col, Row, Button } from 'react-bootstrap'
 
 import Layout from './_layout'
+import Header from 'components/common/Header'
+import Footer from "components/common/Footer"
 
 import DisplayTimer from 'components/index/DisplayTimer'
 import DisplayRound from 'components/index/DisplayRound'
@@ -15,6 +17,7 @@ import { getColourData } from 'lib/game'
 import { shuffle, useInterval, zip } from 'lib/utils'
 import { useCookies } from 'react-cookie'
 
+const gameTime = 5.0
 export default function Game({ colours }) {
   
   const [colour, setColour] = useState("#eeeeee")
@@ -22,7 +25,7 @@ export default function Game({ colours }) {
   const [running, setRunning] = useState(false)
 
   const [score, setScore] = useState(0)
-  const [time, setTime] = useState(20.0)
+  const [time, setTime] = useState(gameTime)
   const [round, setRound] = useState(0)
   const [best, setBest] = useState(0)
 
@@ -36,16 +39,25 @@ export default function Game({ colours }) {
     window.modal.show()
   }, [])
   
+  
   useInterval(() => {
-    if (time <= 0.0) {
+    if (time <= 0.1) {
       if (parseInt(cookies['best']) < score || cookies['best'] == undefined) {
         setCookie('best', score)
       }
-      location.reload()
+      reset()
+      window.modal.show()
     } else {
       setTime(time - 0.1)
     }
   }, running ? 100 : null)
+
+  const reset = () => {
+    setRunning(false)
+    setTime(gameTime)
+    setScore(0)
+    setRound(0)
+  }
 
   const randomlySetNewColour = function() {
 
@@ -89,39 +101,33 @@ export default function Game({ colours }) {
     startGame()
   }
 
-  const changeButtonVariantBriefly = (index, variant, time) => {
-    const previousVariant = buttonVariant[index]
-
-    let newButtonVariant = [...buttonVariant]
-    newButtonVariant[index] = variant
-    console.log(newButtonVariant)
-    setButtonVariant(newButtonVariant)
-
-    setTimeout((previousVariant) => {
-      let newButtonVariant = [...buttonVariant]
-      newButtonVariant[index] = previousVariant
-      setButtonVariant(newButtonVariant)
-    }, time)
+  const timeout = async (ms) => {
+    return new Promise(resolve => setTimeout(resolve, ms))
   }
 
-  const answerButtonHandler = (answer, index) => {
+  const changeButtonVariant = (index, variant) => {
+    let newButtonVariant = [...buttonVariant]
+    newButtonVariant[index] = variant
+    setButtonVariant(newButtonVariant)
+  }
+
+  const answerButtonHandler = async (answer, index) => {
     if (answer === correctAnswer) {
       
-      changeButtonVariantBriefly(index, 'success', 300)
+      changeButtonVariant(index, 'success')
+      await timeout(300)
+      setScore(score + 100)
+      if (score > best) {
+        setBest(score)
+      }
+      randomlySetNewColour()
+      changeButtonVariant(index, 'primary')
 
-      setTimeout(() => {
-        setScore(score => score + 100)
-
-        if (score > best) {
-          setBest(score)
-        }
-        randomlySetNewColour()
-      }, 300)
     } else {
-      changeButtonVariantBriefly(index, 'danger', 300)
-      setTimeout(() => {
-        randomlySetNewColour()
-      }, 300)
+      changeButtonVariant(index, 'danger')
+      await timeout(300)
+      randomlySetNewColour()
+      changeButtonVariant(index, 'primary')
     }
     setRound(round + 1)
   }
@@ -129,39 +135,45 @@ export default function Game({ colours }) {
 
   return (
     <Layout>
-      <Row className="context">
-        <Col className="context__box context__box--timer">
-          <h4 className="context__header">Time:</h4>
-          <DisplayTimer value={time}/>
-        </Col>
-        <Col className="context__box context__box--round">
-          <h4 className="context__header">Round:</h4>
-          <DisplayRound value={round}/>
-        </Col>
-        <Col className="context__box context__box--score">
-          <h4 className="context__header">Score:</h4>
-          <DisplayScore value={score}/>
-        </Col>
-        <Col className="context__box context__box--header">
-          <h4 className="context__header">Best:</h4>
-          <DisplayBest value={best}/>
-        </Col>
-      </Row>
-      <Row className="colourpanel">
-        <ColourPanel colour={colour}/>
-      </Row>
-      <div className="container">
-        <Row className="answer-area align-items-center">
-          { zip(choices, buttonVariant).map( ([choice, state], index) => {
-            return (
-              <Col xs={6} key={index} className="answer-area__choice d-flex justify-content-center">
-                <Button variant={state} onClick={() => answerButtonHandler(choice, index)} style={{textTransform: 'capitalize', width: "80%", height:"2rem", transition: "all 0.1s ease-out"}}>{choice}</Button>
-              </Col>
-            )
-          })}
-        </Row>
-      </div>
-      <CustomModal onStartClickedHandler={startClickedHandler}></CustomModal>
+      <Header running={running}/>
+      <main className={`${running ? "fullscreen": ""}`}>
+        <Container fluid>
+          <Row className="context">
+            <Col className="context__box context__box--timer">
+              <h4 className="context__header">Time:</h4>
+              <DisplayTimer value={time}/>
+            </Col>
+            <Col className="context__box context__box--round">
+              <h4 className="context__header">Round:</h4>
+              <DisplayRound value={round}/>
+            </Col>
+            <Col className="context__box context__box--score">
+              <h4 className="context__header">Score:</h4>
+              <DisplayScore value={score}/>
+            </Col>
+            <Col className="context__box context__box--header">
+              <h4 className="context__header">Best:</h4>
+              <DisplayBest value={best}/>
+            </Col>
+          </Row>
+          <Row className="colourpanel">
+            <ColourPanel colour={colour}/>
+          </Row>
+          <div className="container">
+            <Row className="answer-area align-items-center">
+              { zip(choices, buttonVariant).map( ([choice, state], index) => {
+                return (
+                  <Col xs={6} key={index} className="answer-area__choice d-flex justify-content-center">
+                    <Button variant={state} onClick={() => answerButtonHandler(choice, index)} style={{textTransform: 'capitalize', width: "80%", height:"2rem", transition: "all 0.1s ease-out"}}>{choice}</Button>
+                  </Col>
+                )
+              })}
+            </Row>
+          </div>
+          <CustomModal onStartClickedHandler={startClickedHandler}></CustomModal>
+        </Container>
+        <Footer />
+      </main>
     </Layout>
   )
 }
